@@ -3,12 +3,47 @@ import {createRoot} from "react-dom/client";
 import axios from "axios";
 
 //using fucntion to build up APP
+const App = () => {
+    const [movies, setMovies] = React.useState([]) //set the initial movies to an empty array []
+    //get the data from the api
+    React.useEffect(
+        () => {
+            const load = async() => {
+                const response = await axios.get('/api/movies') //get the data from api
+                setMovies(response.data) //set the data from api to movies
+            };
+            load() //load the data
+        }, []
+    );
+    return (
+        <div>
+            <h1>Movie Lists</h1>
+            <ul>
+                {
+                    movies.map(
+                        movie => {
+                            return (
+                                <li key = {movie.id}>
+                                    {movie.name} 
+                                    {new Date(movie.updatedAt).toLocaleDateString()} 
+                                    {
+                                        <button disabled={movie.watched ? true : false}>watched</button>
+                                    }
+                                    {
+                                        <button disabled={movie.notwatched ? true : false}>unwatched</button>
+                                    }
+                                </li>
+                            )
+                        }
+                    )
+                }
+            </ul>
+        </div>
+    )
 
-// const App = () => {
-//     const [movies, setMovies] = React.useState([]) //set the 
-// }
+}
 
-
+/*
 //using class method to build the react app
 class App extends React.Component{
     constructor(){
@@ -55,7 +90,7 @@ class App extends React.Component{
     }
 
 }
-
+*/
 
 const root = createRoot(document.querySelector('#root'))
 root.render(<App />)
